@@ -18,11 +18,15 @@ function App() {
 
   const serverCheck = async () => {
     const response = await axios.get("http://localhost:4000");
-    console.log(response.data);
-  }
+    return response.data;
+  };
 
   useEffect(() => {
-    serverCheck();
+    serverCheck()
+      .then(data => console.log(data))
+      .catch((error) => {
+        console.log(error.response.data);
+      });
   }, []);
 
   return (
