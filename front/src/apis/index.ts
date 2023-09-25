@@ -10,7 +10,7 @@ const API_DOMAIN = 'http://localhost:4000/api/v1';
 const SIGN_UP_URL = () => `${API_DOMAIN}/auth/sign-up`;
 
 // description: sign up request //
-export const signUpRequset  = async (requestBody: SignUpRequestDto) => {
+export const signUpRequest  = async (requestBody: SignUpRequestDto) => {
     const result = await axios.post(SIGN_UP_URL(), requestBody)
         .then(response => {
             const responseBody: SignUpResponseDto = response.data;

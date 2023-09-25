@@ -8,6 +8,8 @@ import { LoginUser } from 'types';
 import { useNavigate } from 'react-router-dom';
 import { MAIN_PATH } from 'constant';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
+import { signUpRequest } from 'apis';
+import { SignUpRequestDto } from 'apis/dto/request/auth';
 
 //          component: 인증 페이지          //
 export default function Authentication() {
@@ -177,6 +179,36 @@ export default function Authentication() {
 
     //          function: 다음 주소 검색 팝업 오픈 함수          //
     const open = useDaumPostcodePopup();
+    //          function: sign up response 처리 함수          //
+    const signUpResponse = (code: string) => {
+      if (code === 'VF') alert('모두 입력하세요.');
+      if (code === 'DE') {
+        setEmailError(true);
+        setEmailErrorMessage('중복되는 이메일 주소 입니다.');
+        setPage(1);
+      }
+      if (code === 'DN') {
+        setNicknameError(true);
+        setNicknameErrorMessage('중복되는 닉네임 입니다.');
+      }
+      if (code === 'DT') {
+        setTelNumberError(true);
+        setTelNumberErrorMessage('중복되는 휴대 전화번호 입니다.');
+      }
+      if (code === 'DBE') alert('데이터베이스 오류입니다.');
+      if (code !== 'SU') return;
+
+      setEmail('');
+      setPassword('');
+      setNickname('');
+      setTelNumber('');
+      setAddress('');
+      setAddressDetail('');
+      setConsent(false);
+      setPage(1);
+      setView('sign-in');
+
+    }
 
     //          event handler: 비밀번호 아이콘 클릭 이벤트 처리          //
     const onPasswordIconClickHandler = () => {
@@ -284,9 +316,17 @@ export default function Authentication() {
       if (checkedNickname || checkedTelNumber || checkedAddress || !consent) return;
 
       // TODO: 회원가입 처리 및 응답 처리
-      
+      const requestBody: SignUpRequestDto = {
+        email,
+        password,
+        nickname,
+        telNumber,
+        address,
+        addressDetail,
+        agreedPersonal: consent
+      };
 
-      setView('sign-in');
+      signUpRequest(requestBody).then(signUpResponse);
     }
 
     //          render: sign up 카드 컴포넌트 렌더링         //
