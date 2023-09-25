@@ -29,4 +29,9 @@ public class GetSignInUserResponseDto extends ResponseDto {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    public static ResponseEntity<ResponseDto> notExistUser() {
+        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EIXST_USER);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+
 }
