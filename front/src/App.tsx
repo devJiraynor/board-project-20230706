@@ -1,7 +1,5 @@
-import { Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Footer from 'layouts/Footer';
-import Header from 'layouts/Header';
 import { AUTH_PATH, BOARD_DETAIL_PATH, BOARD_UPDATE_PATH, BOARD_WRITE_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
 import Main from 'views/Main';
 import Authentication from 'views/Authentication';

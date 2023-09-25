@@ -115,7 +115,7 @@ export default function Authentication() {
   const SignUpCard = () => {
 
     //          state: 페이지 번호 상태          //
-    const [page, setPage] = useState<1 | 2>(2);
+    const [page, setPage] = useState<1 | 2>(1);
 
     //          state: 이메일 상태          //
     const [email, setEmail] = useState<string>('');
@@ -284,6 +284,7 @@ export default function Authentication() {
       if (checkedNickname || checkedTelNumber || checkedAddress || !consent) return;
 
       // TODO: 회원가입 처리 및 응답 처리
+      
 
       setView('sign-in');
     }
