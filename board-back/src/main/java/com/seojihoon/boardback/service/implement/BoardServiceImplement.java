@@ -1,5 +1,6 @@
 package com.seojihoon.boardback.service.implement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -9,18 +10,21 @@ import com.seojihoon.boardback.dto.request.board.PostBoardRequestDto;
 import com.seojihoon.boardback.dto.response.ResponseDto;
 import com.seojihoon.boardback.dto.response.board.PostBoardResponseDto;
 import com.seojihoon.boardback.entity.BoardEntity;
+import com.seojihoon.boardback.entity.BoardImageEntity;
+import com.seojihoon.boardback.repository.BoardImageRepository;
 import com.seojihoon.boardback.repository.BoardRepository;
 import com.seojihoon.boardback.repository.UserRepository;
-import com.seojihoon.boardback.service.BoardSerivce;
+import com.seojihoon.boardback.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImplement implements BoardSerivce {
+public class BoardServiceImplement implements BoardService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final BoardImageRepository boardImageRepository;
 
     @Override
     public ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {
@@ -34,6 +38,15 @@ public class BoardServiceImplement implements BoardSerivce {
             boardRepository.save(boardEntity);
 
             List<String> boardImageList = dto.getBoardImageList();
+            Integer boardNumber = boardEntity.getBoardNumber();
+
+            List<BoardImageEntity> boardImageEntities = new ArrayList<>();
+            for (String boardImage: boardImageList) {
+                BoardImageEntity boardImageEntity = new BoardImageEntity(boardNumber, boardImage);
+                boardImageEntities.add(boardImageEntity);
+            }
+
+            boardImageRepository.saveAll(boardImageEntities);
 
         } catch (Exception exception) {
             exception.printStackTrace();
