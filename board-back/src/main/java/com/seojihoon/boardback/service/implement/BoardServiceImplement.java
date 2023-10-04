@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.seojihoon.boardback.dto.request.board.PostBoardRequestDto;
 import com.seojihoon.boardback.dto.response.ResponseDto;
+import com.seojihoon.boardback.dto.response.board.GetBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetLatestBoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.PostBoardResponseDto;
 import com.seojihoon.boardback.entity.BoardEntity;
@@ -61,6 +62,28 @@ public class BoardServiceImplement implements BoardService {
 
     }
 
+	@Override
+	public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
+
+        BoardViewEntity boardViewEntity = null;
+        List<BoardImageEntity> boardImageEntities = new ArrayList<>();
+
+        try {
+
+            boardViewEntity = boardViewRepository.findByBoardNumber(boardNumber);
+            if (boardViewEntity == null) return GetBoardResponseDto.notExistBoard();
+
+            boardImageEntities = boardImageRepository.findByBoardNumber(boardNumber);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetBoardResponseDto.success(boardViewEntity, boardImageEntities);
+
+	}
+
     @Override
     public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
 
@@ -78,7 +101,5 @@ public class BoardServiceImplement implements BoardService {
         return GetLatestBoardListResponseDto.success(boardViewEntities);
 
     }
-
-    
     
 }
