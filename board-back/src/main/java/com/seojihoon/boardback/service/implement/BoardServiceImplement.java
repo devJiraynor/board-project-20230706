@@ -8,11 +8,14 @@ import org.springframework.stereotype.Service;
 
 import com.seojihoon.boardback.dto.request.board.PostBoardRequestDto;
 import com.seojihoon.boardback.dto.response.ResponseDto;
+import com.seojihoon.boardback.dto.response.board.GetLatestBoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.PostBoardResponseDto;
 import com.seojihoon.boardback.entity.BoardEntity;
 import com.seojihoon.boardback.entity.BoardImageEntity;
+import com.seojihoon.boardback.entity.BoardViewEntity;
 import com.seojihoon.boardback.repository.BoardImageRepository;
 import com.seojihoon.boardback.repository.BoardRepository;
+import com.seojihoon.boardback.repository.BoardViewRepository;
 import com.seojihoon.boardback.repository.UserRepository;
 import com.seojihoon.boardback.service.BoardService;
 
@@ -24,6 +27,7 @@ public class BoardServiceImplement implements BoardService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final BoardViewRepository boardViewRepository;
     private final BoardImageRepository boardImageRepository;
 
     @Override
@@ -54,6 +58,24 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return PostBoardResponseDto.success();
+
+    }
+
+    @Override
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
+
+        List<BoardViewEntity> boardViewEntities = new ArrayList<>();
+        
+        try {
+
+            boardViewEntities = boardViewRepository.findByOrderByWriteDatetimeDesc();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetLatestBoardListResponseDto.success(boardViewEntities);
 
     }
 
