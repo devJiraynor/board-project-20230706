@@ -13,4 +13,5 @@ public interface BoardService {
 
     ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber);
     ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList();
+    
 }
