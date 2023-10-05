@@ -86,7 +86,7 @@ export const getFavoriteListRequest = async (boardNumber: string | number) => {
             return responseBody;
         });
     return result;
-}
+};
 
 // description: get latest board list request //
 export const getLatestBoardListRequest = async () => {

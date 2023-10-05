@@ -12,13 +12,16 @@ import com.seojihoon.boardback.dto.response.board.GetBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetLatestBoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.PostBoardResponseDto;
+import com.seojihoon.boardback.dto.response.board.PutFavoriteResponseDto;
 import com.seojihoon.boardback.entity.BoardEntity;
 import com.seojihoon.boardback.entity.BoardImageEntity;
 import com.seojihoon.boardback.entity.BoardViewEntity;
+import com.seojihoon.boardback.entity.FavoriteEntity;
 import com.seojihoon.boardback.entity.UserEntity;
 import com.seojihoon.boardback.repository.BoardImageRepository;
 import com.seojihoon.boardback.repository.BoardRepository;
 import com.seojihoon.boardback.repository.BoardViewRepository;
+import com.seojihoon.boardback.repository.FavoriteRepository;
 import com.seojihoon.boardback.repository.UserRepository;
 import com.seojihoon.boardback.service.BoardService;
 
@@ -30,6 +33,7 @@ public class BoardServiceImplement implements BoardService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final FavoriteRepository favoriteRepository; 
     private final BoardViewRepository boardViewRepository;
     private final BoardImageRepository boardImageRepository;
 
@@ -93,8 +97,8 @@ public class BoardServiceImplement implements BoardService {
 
         try {
 
-            boolean hasBoard = boardRepository.existsByBoardNumber(boardNumber);
-            if (!hasBoard) return GetFavoriteListResponseDto.notExistBoard();
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if (!existedBoard) return GetFavoriteListResponseDto.notExistBoard();
 
             userEntities = userRepository.findByBoardFavorite(boardNumber);
 
@@ -122,6 +126,33 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return GetLatestBoardListResponseDto.success(boardViewEntities);
+
+    }
+
+    @Override
+    public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email) {
+        
+        try {
+
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if (!existedBoard) return PutFavoriteResponseDto.notExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PutFavoriteResponseDto.notExistUser();
+
+            boolean isFavorite = favoriteRepository.existsByUserEmailAndBoardNumber(email, boardNumber);
+            
+            FavoriteEntity favoriteEntity = new FavoriteEntity(email, boardNumber);
+
+            if (isFavorite) favoriteRepository.delete(favoriteEntity);
+            else favoriteRepository.save(favoriteEntity);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PutFavoriteResponseDto.success();
 
     }
     
