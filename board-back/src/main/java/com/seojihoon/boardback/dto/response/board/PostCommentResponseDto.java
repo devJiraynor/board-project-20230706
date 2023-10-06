@@ -16,9 +16,19 @@ public class PostCommentResponseDto extends ResponseDto {
         super(code, message);
     }
 
-    public ResponseEntity<PostCommentResponseDto> success() {
+    public static ResponseEntity<PostCommentResponseDto> success() {
         PostCommentResponseDto result = new PostCommentResponseDto(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
         return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    public static ResponseEntity<ResponseDto> notExistBoard() {
+        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXIST_BOARD, ResponseMessage.NOT_EXIST_BOARD);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+    
+    public static ResponseEntity<ResponseDto> notExistUser() {
+        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 
 }

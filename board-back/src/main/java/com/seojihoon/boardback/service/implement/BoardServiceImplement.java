@@ -7,16 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.seojihoon.boardback.dto.request.board.PostBoardRequestDto;
+import com.seojihoon.boardback.dto.request.board.PostCommentRequestDto;
 import com.seojihoon.boardback.dto.response.ResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetCommentListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetLatestBoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.PostBoardResponseDto;
+import com.seojihoon.boardback.dto.response.board.PostCommentResponseDto;
 import com.seojihoon.boardback.dto.response.board.PutFavoriteResponseDto;
 import com.seojihoon.boardback.entity.BoardEntity;
 import com.seojihoon.boardback.entity.BoardImageEntity;
 import com.seojihoon.boardback.entity.BoardViewEntity;
+import com.seojihoon.boardback.entity.CommentEntity;
 import com.seojihoon.boardback.entity.FavoriteEntity;
 import com.seojihoon.boardback.entity.UserEntity;
 import com.seojihoon.boardback.repository.BoardImageRepository;
@@ -69,6 +72,29 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return PostBoardResponseDto.success();
+
+    }
+
+    @Override
+    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email) {
+        
+        try {
+
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if (!existedBoard) return PostCommentResponseDto.notExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PostCommentResponseDto.notExistUser();
+
+            CommentEntity commentEntity = new CommentEntity(dto, boardNumber, email);
+            commentRespository.save(commentEntity);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PostCommentResponseDto.success();
 
     }
 
