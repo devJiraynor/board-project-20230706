@@ -4,7 +4,7 @@ import { SignInResponseDto, SignUpResponseDto } from './dto/response/auth';
 import ResponseDto from './dto/response';
 import { GetSignInUserResponseDto, GetUserResponseDto } from './dto/response/user';
 import { PostBoardRequestDto, PostCommentRequestDto } from './dto/request/board';
-import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto } from './dto/response/board';
+import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto } from './dto/response/board';
 
 // description: Domain URL //
 const DOMAIN = 'http://localhost:4000';
@@ -142,7 +142,18 @@ export const postBoardRequest = async (requestBody: PostBoardRequestDto, token: 
 
 // description: post comment request //
 export const postCommentRequest = async (requestBody: PostCommentRequestDto, boardNumber: string, token: string) => {
-    
+    const result = await axios.post(POST_COMMENT_URL(boardNumber), requestBody, authorization(token))
+        .then(response => {
+            const responseBody: PostCommentResponseDto = response.data;
+            const { code } = responseBody;
+            return code;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            const { code } = responseBody;
+            return code;
+        })
+    return result;
 }
 
 // description: put favorite request //
