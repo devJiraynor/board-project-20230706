@@ -2,7 +2,7 @@ import React from 'react';
 import './style.css';
 import { CommentListItem } from 'types';
 import DefaultProfileImage from 'assets/default-profile-image.png';
-import dayjs from'dayjs';
+import dayjs from 'dayjs';
 
 //          interface: 댓글 리스트 아이템 컴포넌트 Props         //
 interface Props {
