@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.seojihoon.boardback.dto.request.board.PatchBoardRequestDto;
 import com.seojihoon.boardback.dto.request.board.PostBoardRequestDto;
 import com.seojihoon.boardback.dto.request.board.PostCommentRequestDto;
 import com.seojihoon.boardback.dto.response.ResponseDto;
@@ -13,6 +14,7 @@ import com.seojihoon.boardback.dto.response.board.GetBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetCommentListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetLatestBoardListResponseDto;
+import com.seojihoon.boardback.dto.response.board.PatchBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.PostBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.PostCommentResponseDto;
 import com.seojihoon.boardback.dto.response.board.PutFavoriteResponseDto;
@@ -204,6 +206,43 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return PutFavoriteResponseDto.success();
+
+    }
+
+    @Override
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email) {
+        
+        try {
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PatchBoardResponseDto.notExistUser();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return PatchBoardResponseDto.notExistBoard();
+
+            boolean equalWriter = boardEntity.getWriterEmail().equals(email);
+            if (!equalWriter) return PatchBoardResponseDto.noPermission();
+
+            boardEntity.patch(dto);
+            boardRepository.save(boardEntity);
+
+            List<String> boardImageList = dto.getBoardImageList();
+
+            boardImageRepository.deleteByBoardNumber(boardNumber);
+
+            List<BoardImageEntity> boardImageEntities = new ArrayList<>();
+            for (String boardImage: boardImageList) {
+                BoardImageEntity boardImageEntity = new BoardImageEntity(boardNumber, boardImage);
+                boardImageEntities.add(boardImageEntity);
+            }
+            boardImageRepository.saveAll(boardImageEntities);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PatchBoardResponseDto.success();
 
     }
     
