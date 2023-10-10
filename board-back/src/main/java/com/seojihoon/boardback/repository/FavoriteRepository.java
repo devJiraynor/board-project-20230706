@@ -1,5 +1,7 @@
 package com.seojihoon.boardback.repository;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +13,7 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Favori
     
     boolean existsByUserEmailAndBoardNumber(String userEmail, Integer boardNumber);
 
+    @Transactional
+    void deleteByBoardNumber(Integer boardNumber);
+    
 }
