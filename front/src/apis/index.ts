@@ -247,6 +247,8 @@ const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
 const GET_USER_URL = (email: string) => `${API_DOMAIN}/user/${email}`;
 // description: patch nickname API end point //
 const PATCH_NICKNAME_URL = () => `${API_DOMAIN}/user/nickname`;
+// description: patch profile image API end point //
+const PATCH_PROFILE_IMAGE_URL = () => `${API_DOMAIN}/user/profile-image`;
 
 // description: get sign in user request //
 export const getSignInUserRequest = async (token: string) => {
