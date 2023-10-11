@@ -35,7 +35,6 @@ function App() {
     }
 
     setUser({ ...responseBody as GetSignInUserResponseDto });
-      
   }
 
   //          effect: 현재 path가 변경될 때마다 실행될 함수          //
