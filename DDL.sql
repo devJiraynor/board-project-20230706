@@ -86,3 +86,6 @@ LEFT JOIN (
     GROUP BY board_number
 ) AS I
 ON B.board_number = I.board_number;
+
+ALTER TABLE `search_log` 
+ADD COLUMN `sequence` INT PRIMARY KEY AUTO_INCREMENT COMMENT '로그번호';

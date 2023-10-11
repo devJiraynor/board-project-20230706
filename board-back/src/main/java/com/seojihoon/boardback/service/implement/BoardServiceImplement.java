@@ -19,6 +19,7 @@ import com.seojihoon.boardback.dto.response.board.GetBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetCommentListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetLatestBoardListResponseDto;
+import com.seojihoon.boardback.dto.response.board.GetSearchBoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetTop3BoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetUserBoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.IncreaseViewCountResponseDto;
@@ -31,12 +32,14 @@ import com.seojihoon.boardback.entity.BoardImageEntity;
 import com.seojihoon.boardback.entity.BoardViewEntity;
 import com.seojihoon.boardback.entity.CommentEntity;
 import com.seojihoon.boardback.entity.FavoriteEntity;
+import com.seojihoon.boardback.entity.SearchLogEntity;
 import com.seojihoon.boardback.entity.UserEntity;
 import com.seojihoon.boardback.repository.BoardImageRepository;
 import com.seojihoon.boardback.repository.BoardRepository;
 import com.seojihoon.boardback.repository.BoardViewRepository;
 import com.seojihoon.boardback.repository.CommentRespository;
 import com.seojihoon.boardback.repository.FavoriteRepository;
+import com.seojihoon.boardback.repository.SearchLogRepository;
 import com.seojihoon.boardback.repository.UserRepository;
 import com.seojihoon.boardback.repository.resultSet.CommentListResultSet;
 import com.seojihoon.boardback.service.BoardService;
@@ -50,8 +53,9 @@ public class BoardServiceImplement implements BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final CommentRespository commentRespository;
-    private final FavoriteRepository favoriteRepository; 
+    private final FavoriteRepository favoriteRepository;
     private final BoardViewRepository boardViewRepository;
+    private final SearchLogRepository searchLogRepository;
     private final BoardImageRepository boardImageRepository;
 
     @Override
@@ -233,6 +237,34 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return GetTop3BoardListResponseDto.success(boardViewEntities);
+
+    }
+
+    @Override
+    public ResponseEntity<? super GetSearchBoardListResponseDto> getSearchBoardList(String searchWord, String preSearchWord) {
+        
+        List<BoardViewEntity> boardViewEntities = new ArrayList<>();
+
+        try {
+
+            boardViewEntities = boardViewRepository.findByTitleContainsOrContentContainsOrderByWriteDatetimeDesc(searchWord, searchWord);
+
+            boolean relation = preSearchWord != null;
+
+            SearchLogEntity searchLogEntity = new SearchLogEntity(searchWord, preSearchWord, relation);
+            searchLogRepository.save(searchLogEntity);
+
+            if (relation) {
+                searchLogEntity = new SearchLogEntity(preSearchWord, searchWord, relation);
+                searchLogRepository.save(searchLogEntity);
+            }
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetSearchBoardListResponseDto.success(boardViewEntities);
 
     }
 
