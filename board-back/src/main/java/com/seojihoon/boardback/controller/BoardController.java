@@ -22,6 +22,7 @@ import com.seojihoon.boardback.dto.response.board.GetBoardResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetCommentListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetFavoriteListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetLatestBoardListResponseDto;
+import com.seojihoon.boardback.dto.response.board.GetTop3BoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.GetUserBoardListResponseDto;
 import com.seojihoon.boardback.dto.response.board.IncreaseViewCountResponseDto;
 import com.seojihoon.boardback.dto.response.board.PatchBoardResponseDto;
@@ -74,6 +75,12 @@ public class BoardController {
         @PathVariable("email") String email
     ) {
         ResponseEntity<? super GetUserBoardListResponseDto> response = boardService.getUserBoardList(email);
+        return response;
+    }
+
+    @GetMapping("/top-3")
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
+        ResponseEntity<? super GetTop3BoardListResponseDto> response = boardService.getTop3BoardList();
         return response;
     }
 

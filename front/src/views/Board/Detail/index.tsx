@@ -48,7 +48,7 @@ export default function BoardDetail() {
       if (!writeDatetime) return '';
       const date = dayjs(writeDatetime);
       return date.format('YYYY. MM. DD.');
-    }
+    };
     //          function: get board response 처리 함수          //
     const getBoardResponse = (responseBody: GetBoardResponseDto | ResponseDto) => {
       const { code } = responseBody;

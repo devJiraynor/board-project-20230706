@@ -4,6 +4,7 @@ import { BoardListItem } from 'types';
 import DefaultProfileImage from 'assets/default-profile-image.png';
 import { useNavigate } from 'react-router-dom';
 import { BOARD_DETAIL_PATH } from 'constant';
+import { cutString, getWriteDatetimeFormat } from 'utils';
 
 //          interface: Top3 리스트 아이템 컴포넌트 Props         //
 interface Props {
@@ -26,7 +27,6 @@ export default function Top3ListItem({ boardItem }: Props) {
     navigator(BOARD_DETAIL_PATH(boardNumber));
   };
 
-  // TODO: 타이틀과 내용 초과 범위 처리
   //          render: Top3 리스트 아이템 컴포넌트 렌더링         //
   return (
     <div className='top3-list-item-card' style={{ backgroundImage: `url(${boardTitleImage})` }} onClick={onCardClickHandler} >
@@ -37,12 +37,12 @@ export default function Top3ListItem({ boardItem }: Props) {
           </div>
           <div className='top3-list-item-write-box'>
             <div className='top3-list-item-nickname'>{writerNickname}</div>
-            <div className='top3-list-item-write-date'>{writeDatetime}</div>
+            <div className='top3-list-item-write-date'>{getWriteDatetimeFormat(writeDatetime)}</div>
           </div>
         </div>
         <div className='top3-list-item-middle'>
-          <div className='top3-list-item-title'>{title}</div>
-          <div className='top3-list-item-contents'>{content}</div>
+          <div className='top3-list-item-title'>{cutString(title, 25)}</div>
+          <div className='top3-list-item-contents'>{cutString(content, 40)}</div>
         </div>
         <div className='top3-list-item-bottom'>
           <div className='top3-list-item-counts'>
