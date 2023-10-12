@@ -6,6 +6,7 @@ import { GetSignInUserResponseDto, GetUserResponseDto, PatchNicknameResponseDto,
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './dto/request/board';
 import { PostBoardResponseDto, GetLatestBoardListResponseDto, GetBoardResponseDto, GetFavoriteListResponseDto, PutFavoriteResponseDto, GetCommentListResponseDto, PostCommentResponseDto, PatchBoardResponseDto, DeleteBoardResponseDto, GetUserBoardListResponseDto, IncreaseViewCountResponseDto, GetTop3BoardListResponseDto, GetSearchBoardListResponseDto } from './dto/response/board';
 import { PatchNicknameRequestDto, PatchProfileImageRequestDto } from './dto/request/user';
+import { GetPopularListResponseDto } from './dto/response/search';
 
 // description: Domain URL //
 const DOMAIN = 'http://localhost:4000';
@@ -272,6 +273,23 @@ export const deleteBoardRequest = async (boardNumber: string | number, token: st
         });
     return result;
 }
+
+// description: get popular list API end point //
+const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
+
+// description: get popular list request //
+export const getPopularListRequest = async () => {
+    const result = await axios.get(GET_POPULAR_LIST_URL())
+        .then(response => {
+            const responseBody: GetPopularListResponseDto = response.data;
+            return responseBody;
+        })
+        .catch(error => {
+            const responseBody: ResponseDto = error.response.data;
+            return responseBody;
+        });
+    return result;
+};
 
 // description: get sign in user API end point //
 const GET_SIGN_IN_USER_URL = () => `${API_DOMAIN}/user`;
